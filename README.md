@@ -1,0 +1,2 @@
+# Erlang
+Learning Functional Programming
