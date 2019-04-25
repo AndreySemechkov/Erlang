@@ -10,14 +10,9 @@
 -author("Sean").
 
 %% API
--export([trianglesArea/1]).
--export([getShape/1]).
--export([getShapeDim/1]).
--export([calcAreaRectangle/1]).
--export([calcAreaTriangle/1]).
--export([calcAreaEllipse/1]).
+-export([shapesArea/1]).
 -export([squaresArea/1]).
--export([testSquare/0]).
+-export([trianglesArea/1]).
 
 shapesArea({shapes,[]}) -> 0;
 shapesArea({shapes,[H|T]}) ->
@@ -33,6 +28,13 @@ trianglesArea({shapes,[H|T]}) ->
    case getShape(H) == triangle of
       true -> calcAreaTriangle(getShapeDim(H)) + trianglesArea({shapes, T});
       false -> 0 + trianglesArea({shapes,T})
+   end.
+   
+squaresArea({shapes,[]}) -> 0;
+squaresArea({shapes, [H|T]})  ->
+   case getShape(H) == rectangle of
+      true -> calcAreaSquare(getShapeDim(H)) + squaresArea({shapes, T});
+      false -> 0 + squaresArea({shapes, T})
    end.
 
 
@@ -59,16 +61,5 @@ calcAreaEllipse({radius, Radius1, Radius2}) when Radius1 > 0 , Radius2 > 0 ->
 calcAreaEllipse({radius, _, _}) ->
    io:format("Invalid Dimensions!~n").
 
-squaresArea({shapes,[]}) -> 0;
-squaresArea({shapes, [H|T]})  ->
-   case getShape(H) == rectangle of
-      true -> calcAreaSquare(getShapeDim(H)) + squaresArea({shapes, T});
-      false -> 0 + squaresArea({shapes, T})
-   end.
-
 calcAreaSquare({dim, Height, Width}) when Height == Width -> math:pow(Width,2);
 calcAreaSquare({dim, _, _}) -> 0.
-
-testSquare() ->
-   io:fwrite("Starting!~n"),
-   shapes:squaresArea({shapes, [{rectangle, {dim, 5, 6}}, {rectangle, {dim, 5, 5.0}}, {rectangle, {dim, 5, 5}}, {triangle, {dim, 5, 5.0}}, {ellipse, {radius, 5, 5.0}}]}).
