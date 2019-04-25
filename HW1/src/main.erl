@@ -29,6 +29,7 @@ validShapes4() -> {shapes,[validEllipse2(), validRectangle1(), validTriangle2() 
 
 
 test() ->
-   io:fwrite("Starting!~n"),
-   shapes:squaresArea({shapes, [{rectangle, {dim, 5, 6}}, {rectangle, {dim, 5, 5.0}}, {rectangle, {dim, 5, 5}}, {triangle, {dim, 5, 5.0}}, {ellipse, {radius, 5, 5.0}}]}).
-   io:format("expecting ~p and got ~p ~n",[57.84955592153876,shapes:shapesArea(validShapes4())]).
+   io:fwrite("Starting our test !~n"),
+   io:format("shapesArea test expecting ~p and got ~p ~n",[57.84955592153876,shapes:shapesArea(validShapes4())]),
+   io:format("squaresArea test expecting ~p and got ~p ~n",[50.0, shapes:squaresArea({shapes, [{rectangle, {dim, 5, 6}}, {rectangle, {dim, 5, 5.0}}, {rectangle, {dim, 5, 5}}, {triangle, {dim, 5, 5.0}}, {ellipse, {radius, 5, 5.0}}]})]),
+   io:format("trianglesArea test expecting ~p and got ~p ~n",[12.5, shapes:trianglesArea({shapes, [{rectangle, {dim, 5, 6}}, {rectangle, {dim, 5, 5.0}}, {rectangle, {dim, 5, 5}}, {triangle, {dim, 5, 5.0}}, {ellipse, {radius, 5, 5.0}}]})]).
