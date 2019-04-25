@@ -10,35 +10,41 @@
 -author("Sean").
 
 %% API
-%%-export([shapesArea/1]).
-%%shapesArea([]) -> 0;
-%%shapesArea([H|T]) ->
-%%   case H
-
 -export([trianglesArea/1]).
-trianglesArea([]) -> 0;
-trianglesArea([H|T]) when H == {triangle, {dim, _, _}}->
-   areaTriangle(H) + trianglesArea(T);
-trianglesArea([_|T]) ->
-   0 + trianglesArea(T).
+-export([getShape/1]).
+-export([getShapeDim/1]).
+-export([calcAreaRectangle/1]).
+-export([calcAreaTriangle/1]).
+-export([calcAreaEllipse/1]).
+
+trianglesArea({shapes,[]}) -> 0;
+trianglesArea({shapes,[H|T]}) ->
+   case getShape(H) == triangle of
+      true -> calcAreaTriangle(getShapeDim(H)) + trianglesArea({shapes, [T]});
+      false -> 0 + trianglesArea({shapes,[T]})
+   end.
 
 
+getShape(ShapeTuple) ->
+   {Shape, {_, _, _}} = ShapeTuple,
+   Shape.
 
--export([areaRectangle/1]).
-areaRectangle({dim, Width, Height}) when Width > 0 ; Height > 0 ->
+getShapeDim(ShapeTuple) ->
+   {_, ShapeDim} = ShapeTuple,
+   ShapeDim.
+
+calcAreaRectangle({dim, Width, Height}) when Width > 0 , Height > 0 ->
    Width * Height;
-areaRectangle({dim, _, _}) ->
+calcAreaRectangle({dim, _, _}) ->
    io:format("Invalid Dimensions!~n").
 
--export([areaTriangle/1]).
-areaTriangle({dim, Base, Height}) when Base > 0 ; Height > 0 ->
+calcAreaTriangle({dim, Base, Height}) when Base > 0 , Height > 0 ->
    Base * Height / 2;
-areaTriangle({dim, _, _}) ->
+calcAreaTriangle({dim, _, _}) ->
    io:format("Invalid Dimensions!~n").
 
--export([areaEllipse/1]).
-areaEllipse({radius, Radius1, Radius2}) when Radius1 > 0 ; Radius2 > 0 ->
+calcAreaEllipse({radius, Radius1, Radius2}) when Radius1 > 0 , Radius2 > 0 ->
    math:pi() * Radius1 * Radius2;
-areaEllipse({radius, _, _}) ->
+calcAreaEllipse({radius, _, _}) ->
    io:format("Invalid Dimensions!~n").
 
