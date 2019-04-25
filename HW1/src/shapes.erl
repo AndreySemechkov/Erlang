@@ -13,6 +13,8 @@
 -export([shapesArea/1]).
 -export([squaresArea/1]).
 -export([trianglesArea/1]).
+-export([circleFilterWrapper/1]).
+-export([squareFilterWrapper/1]).
 
 shapesArea({shapes,[]}) -> 0;
 shapesArea({shapes,[H|T]}) ->
@@ -61,5 +63,47 @@ calcAreaEllipse({radius, Radius1, Radius2}) when Radius1 > 0 , Radius2 > 0 ->
 calcAreaEllipse({radius, _, _}) ->
    io:format("Invalid Dimensions!~n").
 
-calcAreaSquare({dim, Height, Width}) when Height == Width -> math:pow(Width,2);
+calcAreaSquare({dim, Height, Width}) when Height == Width ->
+   math:pow(Width,2);
 calcAreaSquare({dim, _, _}) -> 0.
+
+
+
+squareFilterWrapper({shapes,[H|T]}) ->
+   ShapesList = squareFilter({shapes,[H|T]}),
+   {shapes, ShapesList};
+squareFilterWrapper({radius, _, _}) ->
+   io:format("Invalid Dimensions!~n").
+
+squareFilter({shapes,[]}) -> [];
+squareFilter({shapes,[H|T]}) ->
+   case getShape(H) == rectangle of
+      true ->
+         {_, Width, Height} = getShapeDim(H),
+         case Height == Width of
+            true -> [H|squareFilter({shapes, T})];
+            false -> squareFilter({shapes,T})
+         end;
+      false -> squareFilter({shapes,T})
+   end.
+
+
+circleFilterWrapper({shapes,[H|T]}) ->
+   ShapesList = circleFilter({shapes,[H|T]}),
+   {shapes, ShapesList};
+circleFilterWrapper({radius, _, _}) ->
+   io:format("Invalid Dimensions!~n").
+
+
+circleFilter({shapes,[]}) -> [];
+circleFilter({shapes,[H|T]}) ->
+   case getShape(H) == ellipse of
+      true ->
+         {_, Radius1, Radius2} = getShapeDim(H),
+         case Radius1 == Radius2 of
+            true -> [H|circleFilter({shapes, T})];
+            false -> circleFilter({shapes,T})
+         end;
+      false -> circleFilter({shapes,T})
+   end.
+
