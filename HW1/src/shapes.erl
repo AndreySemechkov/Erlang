@@ -19,6 +19,15 @@
 -export([squaresArea/1]).
 -export([testSquare/0]).
 
+shapesArea({shapes,[]}) -> 0;
+shapesArea({shapes,[H|T]}) ->
+  case getShape(H) of
+    rectangle -> calcAreaRectangle(getShapeDim(H)) + shapesArea({shapes, T});
+    triangle -> calcAreaTriangle(getShapeDim(H)) + shapesArea({shapes, T});
+    ellipse -> calcAreaEllipse(getShapeDim(H)) + shapesArea({shapes, T})
+  end.
+
+
 trianglesArea({shapes,[]}) -> 0;
 trianglesArea({shapes,[H|T]}) ->
    case getShape(H) == triangle of
