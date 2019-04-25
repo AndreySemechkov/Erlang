@@ -10,22 +10,23 @@
 -author("Sean").
 
 %% API
+-export([shapesArea/1]).
 -export([trianglesArea/1]).
--export([getShape/1]).
--export([getShapeDim/1]).
--export([calcAreaRectangle/1]).
--export([calcAreaTriangle/1]).
--export([calcAreaEllipse/1]).
--export([squaresArea/1]).
--export([testSquare/0]).
+
+shapesArea({shapes,[]}) -> 0;
+shapesArea({shapes,[H|T]}) ->
+   case getShape(H) of
+      rectangle -> calcAreaRectangle(getShapeDim(H)) + shapesArea({shapes, T});
+      triangle -> calcAreaTriangle(getShapeDim(H)) + shapesArea({shapes, T});
+      ellipse -> calcAreaEllipse(getShapeDim(H)) + shapesArea({shapes, T})
+   end.
 
 trianglesArea({shapes,[]}) -> 0;
 trianglesArea({shapes,[H|T]}) ->
    case getShape(H) == triangle of
-      true -> calcAreaTriangle(getShapeDim(H)) + trianglesArea({shapes, [T]});
-      false -> 0 + trianglesArea({shapes,[T]})
+      true -> calcAreaTriangle(getShapeDim(H)) + trianglesArea({shapes, T});
+      false -> 0 + trianglesArea({shapes, T})
    end.
-
 
 getShape(ShapeTuple) ->
    {Shape, {_, _, _}} = ShapeTuple,
@@ -49,23 +50,4 @@ calcAreaEllipse({radius, Radius1, Radius2}) when Radius1 > 0 , Radius2 > 0 ->
    math:pi() * Radius1 * Radius2;
 calcAreaEllipse({radius, _, _}) ->
    io:format("Invalid Dimensions!~n").
-
-
-
-
-calcSquareArea({dim, Height, Width}) when Height == Width -> math:pow(Width,2);
-calcSquareArea({dim, _, _}) -> 0;
-
-squaresArea({shapes, [H|T]})  ->
-   case getShape(H)[0]==rectangle of
-      calcSquareArea(H) + squaresArea(T);
-   end.
-squaresArea({dim, _, _}) -> io:format("Invalid Dimensions!~n").
-
-testSquare() ->
-   io:fwrite("Starting!~n"),
-   shapes:squaresArea({shapes, [{rectangle, {dim, 5, 6}}, {rectangle, {dim, 5, 5.0}}]}).
-
-
-
 
