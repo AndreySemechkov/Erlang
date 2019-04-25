@@ -19,7 +19,7 @@
 trianglesArea([]) -> 0;
 trianglesArea([H|T]) when H == {triangle, {dim, _, _}}->
    areaTriangle(H) + trianglesArea(T);
-trianglesArea([H|T]) ->
+trianglesArea([_|T]) ->
    0 + trianglesArea(T).
 
 
