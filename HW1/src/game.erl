@@ -14,35 +14,23 @@
 -export([nextMove/1]).
 -export([explanation/0]).
 
-canWin(N) when N > 0 -> canWin(N, first).
+canWin(N) when N > 2 -> not(canWin(N-2) and (canWin(N-1)));
 
-canWin(N, Player) when N > 3 ->
-   case Player of
-      first -> canWin(N-2, second) orelse canWin(N-1, second);
-      second -> canWin(N-2, first) orelse canWin(N-1, first)
-   end;
+canWin(N) when N == 1 ; N == 2 -> true.
 
-canWin(N, Player) when N == 1 ; N == 2 ->
-   case Player of
-      first -> true;
-      second -> false
-   end;
-
-canWin(N, Player) when N == 3 ->
-   case Player of
-      first -> false;
-      second -> true
-   end.
-
-nextMove(N) when N > 0 ->
-   case canWin(N) of
+nextMove(N) when N > 1 ->
+   CanWin = canWin(N),
+   case CanWin of
       true ->
-         ModN = N rem 3,
-         case ModN of
-            1 -> {true, 1};
-            2 -> {true, 2}
+         CanWin2 = not(canWin(N-1)),
+         case CanWin2 of
+            true -> {true, 1};
+            false -> {true, 2}
          end;
       false -> false
-   end.
+   end;
 
-explanation() -> {"There are two independent recursive calls, therefore we cannot use tail recursion"}.
+nextMove(N) when N == 1 -> {true, 1}.
+
+explanation() -> {"At each call to canWin(N), there are two independent recursive calls - since there are
+                  two options for match picking (1 or 2). ~nTherefore it's difficult to use tail recursion~n"}.
