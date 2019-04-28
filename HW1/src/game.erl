@@ -32,5 +32,5 @@ nextMove(N) when N > 1 ->
 
 nextMove(N) when N == 1 -> {true, 1}.
 
-explanation() -> {"At each call to canWin(N), there are two independent recursive calls - since there are
-                  two options for match picking (1 or 2). ~nTherefore it's difficult to use tail recursion~n"}.
+explanation() -> {'At each call to canWin(N), there are two independent recursive calls - since there are
+two options for match picking (1 or 2). Therefore it is difficult to use tail recursion'}.
