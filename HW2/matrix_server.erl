@@ -17,7 +17,7 @@
 -export([matrix_server_loop/0]).
 
 start_server() ->
-  spawn(cal_server, invoke, []).
+  spawn(cal_server, invoker, []).
 
 matrix_server_loop() ->
   receive
@@ -36,7 +36,7 @@ matrix_server_loop() ->
        matrix_server_loop();
 
     sw_upgrade ->
-       ?MODULE:mat_server()
+       ?MODULE:matrix_server_loop()
 
   end.
 
