@@ -10,20 +10,20 @@
 -author("asemetchkov").
 
 %% API
+-export([invoker/0]).
+
+invoker() ->
+   process_flag(trap_exit, true),
+   Pid = spawn_link(matrix_server, mat_server, []),
+   register(Pid, matrix_server),
+   receive
+      {'EXIT', Pid, normal} -> ok;  % No crash
+      {'EXIT', Pid, shutdown} -> ok; % No crash
+      {'EXIT', Pid, _} -> invoker()
+   end.
 
 
--export([multiply/3]).
--export([shut_down/0]).
--export([get_version/0]).
--export([sw_update/0]).
 
-multiply() ->
-
-shut_down() ->
-
-get_version() ->
-
-sw_update() ->
 
 
 
