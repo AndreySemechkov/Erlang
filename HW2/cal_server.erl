@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 18. May 2019 19:30
 %%%-------------------------------------------------------------------
--module(server).
+-module(cal_server).
 -author("asemetchkov").
 
 %% API
@@ -21,6 +21,7 @@ invoker() ->
       {'EXIT', Pid, shutdown} -> ok; % No crash
       {'EXIT', Pid, _} -> invoker()
    end.
+
 
 
 

@@ -14,29 +14,29 @@
 -export([get_version/0]).
 -export([explanation/0]).
 
--export([mat_server/0]).
+-export([matrix_server_loop/0]).
 
 start_server() ->
-  spawn(server, invoke, []).
+  spawn(cal_server, invoke, []).
 
-mat_server() ->
+matrix_server_loop() ->
   receive
 
     {Pid, MsgRef, {multiple, Mat1, Mat2}} ->
       %spawn a new server to do the job
-      spawn(server, mult, [Mat1, Mat2, Pid, MsgRef]),
-      mat_server();
+       spawn(cal_server, mult, [Mat1, Mat2, Pid, MsgRef]),
+       matrix_server_loop();
 
     shutdown ->
-      %shut down the servers
-      exit(shutdown);
+       %shut down the servers
+       exit(shutdown);
 
     {Pid, MsgRef, get_version} ->
-      Pid ! {MsgRef, get_version()},
-      mat_server();
+       Pid ! {MsgRef, get_version()},
+       matrix_server_loop();
 
     sw_upgrade ->
-      ?MODULE:mat_server()
+       ?MODULE:mat_server()
 
   end.
 
