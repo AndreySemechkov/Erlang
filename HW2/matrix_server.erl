@@ -18,12 +18,27 @@
 start_server() ->
   spawn(server, invoke, []).
 
-loop() ->
+mat_server() ->
   receive
 
+    {Pid, MsgRef, {multiple, Mat1, Mat2}} ->
+      %spawn a new server to do the job
+      spawn(server, mult(), {Mat1, Mat2}),
+      {MsgRef, Mat},
+      mat_server();
+
     shutdown ->
+    %shut down the servers
+      exit(shutdown);
+
+    {Pid, MsgRef, get_version} ->
+      Pid ! {MsgRef, version_1},
+      mat_server();
 
     sw_upgrade ->
+      %update sw by lecture
+      ?MODULE,
+      mat_server()
 
   end.
 
@@ -36,9 +51,16 @@ mult(Mat1, Mat2) ->
   end.
 
 shutdown() ->
+  exit(whereis(matrix_server), shutdown).
 
 
-get_version() ->
+  %MsgRef = make_ref(),
+  %Pid = whereis(matrix_server),
+  %Pid ! {self(), MsgRef, get_version},
+  %ask for server version}
 
+  %receive
+  %  {Pid, {MsgRef, Mat}} -> {MsgRef, Mat}
+  %end.
 
 explanation() ->
