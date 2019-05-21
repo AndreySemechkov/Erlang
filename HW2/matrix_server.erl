@@ -49,4 +49,4 @@ get_version() ->
   version_1.
 
 explanation() ->
-   "THe supervisor is in diffrent server so that updating code will not affect the supervisor module".
+   "The supervisor is in diffrent module so that updating code version will not affect the supervisor module".
