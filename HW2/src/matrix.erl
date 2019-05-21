@@ -24,6 +24,7 @@ getCol(Mat,Col) ->
 setElementMat(Row,Col,OldMat, NewVal) ->
   setelement (Row,OldMat ,setelement (Col,element(Row,OldMat),NewVal)).
 
+%% Multiply two given matrices and send the result to Pid with MsgRef
 multiply(Mat1, Mat2, Pid, MsgRef) ->
    DimX = tuple_size(Mat1),
    DimY = tuple_size(getRow(Mat2, 1)),
@@ -31,6 +32,7 @@ multiply(Mat1, Mat2, Pid, MsgRef) ->
    multiply_mat(Mat1, Mat2, DimX, DimY),
    Pid ! {MsgRef, fill_matrix(InitMat, 0, DimX * DimY)}.
 
+%% Create DimX * DimY different processes in order to calculate each element of the result matrix
 multiply_mat(Mat1, Mat2, DimX, DimY) ->
    Rows = tuple_to_list(Mat1),
    Cols = [getCol(Mat2, Y) || Y <- lists:seq(1, DimY)],
@@ -38,6 +40,7 @@ multiply_mat(Mat1, Mat2, DimX, DimY) ->
    [spawn(fun() -> multiply_vec(Row, lists:nth(Row, Rows), Col, lists:nth(Col, Cols), Pid) end)
       || Row <- lists:seq(1, DimX), Col <- lists:seq(1, DimY)].
 
+%% Fill the result matrix with elements
 fill_matrix(Mat, Cnt, MaxCnt) when Cnt == MaxCnt ->
    Mat;
 fill_matrix(Mat, Cnt, MaxCnt) ->
@@ -48,10 +51,11 @@ fill_matrix(Mat, Cnt, MaxCnt) ->
          fill_matrix(New_Mat, New_Cnt, MaxCnt)
    end.
 
-
+%% Multiply two vectors and send the result to Pid
 multiply_vec(Row, RowVec, Col, ColVec, Pid) ->
    Pid ! {Row, Col, multiply_list_vec(tuple_to_list(RowVec), tuple_to_list(ColVec), 0)}.
 
+%% Multiply two given vectors
 multiply_list_vec([], [], Res) ->
    Res;
 multiply_list_vec([H_vec1|T_vec1], [H_vec2|T_vec2], Res) ->

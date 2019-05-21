@@ -12,6 +12,7 @@
 %% API
 -export([invoke/0]).
 
+%% Supervising the health of our matrix server
 invoke() ->
    process_flag(trap_exit, true),
    Pid = spawn_link(matrix_server, matrix_server_listener, []),

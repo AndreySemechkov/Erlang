@@ -13,6 +13,7 @@
 start_server() ->
    spawn(super_server, invoke, []).
 
+%% Listener. Receives messages from client and handles them in the appropriate fashion
 matrix_server_listener() ->
   receive
 
@@ -33,13 +34,11 @@ matrix_server_listener() ->
 
   end.
 
-
+%% Multiplying two given matrices
 mult(Mat1, Mat2) ->
-  matrix:multiply(Mat1, Mat2, self(), 1),
+  matrix:multiply(Mat1, Mat2, self(), just_a_reference),
   receive
-    {1,Y} -> Y
-  after
-    1000000 -> ok
+    {just_a_reference,Y} -> Y
   end.
 
 shutdown() ->
@@ -49,4 +48,4 @@ get_version() ->
   version_1.
 
 explanation() ->
-   "The supervisor is in diffrent module so that updating code version will not affect the supervisor module".
+   "The supervisor is in different module so that updating code version will not affect the supervisor module".
