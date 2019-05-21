@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(matrix_server).
 -author("asemetchkov").
--export([start_server/0, shutdown/0, get_version/0, explanation/0, matrix_server_listener/0]).
+-export([start_server/0, mult/2, shutdown/0, get_version/0, explanation/0, matrix_server_listener/0]).
 
 start_server() ->
    spawn(super_server, invoke, []).
@@ -34,12 +34,13 @@ matrix_server_listener() ->
   end.
 
 
-%%mult(Mat1, Mat2) ->
-%%  receive
-%%
-%%  after
-%%    10000 -> ok
-%%  end.
+mult(Mat1, Mat2) ->
+  matrix:multiply(Mat1, Mat2, self(), 1),
+  receive
+    {1,Y} -> Y
+  after
+    1000000 -> ok
+  end.
 
 shutdown() ->
   exit(whereis(matrix_server), shutdown).
@@ -48,4 +49,4 @@ get_version() ->
   version_1.
 
 explanation() ->
-   "".
+   "THe supervisor is in diffrent server so that updating code will not affect the supervisor module".
