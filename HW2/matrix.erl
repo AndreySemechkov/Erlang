@@ -10,8 +10,7 @@
 -author("asemetchkov").
 
 %% API
--export([]).
--module(matrix). -compile(export_all).
+-compile(export_all).
 % generate a matrix with X rows and Y columns with zeros
 getZeroMat(X,Y) ->
   list_to_tuple([list_to_tuple([0 || _Y <- lists:seq(1,Y)]) || _X <- lists:seq(1,X)]).
