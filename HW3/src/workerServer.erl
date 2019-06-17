@@ -31,7 +31,7 @@ handle_cast({doneCalc}, {Name, Count}) ->
    {noreply, NewState}.
 
 handle_call({numOfRunning}, _From, {Name, Count}) ->
-   Reply = {Name, Count},
+   Reply = Count,
    NewState = {Name, Count},
    {reply, Reply, NewState}.
 

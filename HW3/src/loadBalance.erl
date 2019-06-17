@@ -20,12 +20,8 @@ stopServers() ->
    exit(shutdown).
 
 numberOfRunningFunctions(ServerID) ->
-   case ServerID of
-      1 -> {_, NumOfRunningFunctions} = gen_server:call(server1, {numOfRunning});
-      2 -> {_, NumOfRunningFunctions} = gen_server:call(server2, {numOfRunning});
-      3 -> {_, NumOfRunningFunctions} = gen_server:call(server3, {numOfRunning})
-   end,
-   NumOfRunningFunctions.
+   Server = getServerName(ServerID),
+   gen_server:call(Server, {numOfRunning}).
 
 calcFun(PID, Func, MsgRef) ->
    ok,
