@@ -10,14 +10,37 @@
 -author("Sean").
 
 %% API
--behavior(supervisor).
--export([]).
+-export([startServers/0, stopServers/0, numberOfRunningFunctions/1, calcFun/3]).
 
-start_link() ->
-   supervisor:start_link({local, ?MODULE}, ?MODULE, []).
+startServers() ->
+   systemSupervisor:start_link().
 
-init([]) ->
-   Server1 = {server1, {server1, start_link, []}, permanent, infinity, worker, [server1]},
-   Server2 = {server2, {server2, start_link, []}, permanent, , worker, [server2]},
-   Server3 = {server3, {server3, start_link, []}, permanent, , worker, [server3]},
-   {ok, {{one_for_all, 1, 1}, [Server1, Server2, Server3]}}.
+stopServers() ->
+   systemSupervisor:shutdown_link(),
+   exit(shutdown).
+
+numberOfRunningFunctions(ServerID) ->
+   case ServerID of
+      1 -> {_, NumOfRunningFunctions} = gen_server:call(server1, {numOfRunning});
+      2 -> {_, NumOfRunningFunctions} = gen_server:call(server2, {numOfRunning});
+      3 -> {_, NumOfRunningFunctions} = gen_server:call(server3, {numOfRunning})
+   end,
+   NumOfRunningFunctions.
+
+calcFun(PID, Func, MsgRef) ->
+   ok,
+   Workload = [numberOfRunningFunctions(1), numberOfRunningFunctions(2), numberOfRunningFunctions(3)],
+   MinWorkload = lists:min(Workload),
+   OptServer = getServerName(string:str(Workload, [MinWorkload])),
+   gen_server:cast(OptServer, {calcFunc, Func, PID, MsgRef}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% Internal Functions %%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+getServerName(ServerID) ->
+   case ServerID of
+      1 -> server1;
+      2 -> server2;
+      3 -> server3
+   end.
