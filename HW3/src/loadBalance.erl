@@ -16,8 +16,7 @@ startServers() ->
    systemSupervisor:start_link().
 
 stopServers() ->
-   systemSupervisor:shutdown_link(),
-   exit(shutdown).
+   systemSupervisor:shutdown_link().
 
 numberOfRunningFunctions(ServerID) ->
    Server = getServerName(ServerID),
